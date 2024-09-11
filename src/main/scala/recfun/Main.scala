@@ -12,31 +12,6 @@ object Main {
         print(pascal(col, row) + " ")
       println()
     }
-    println("Balance")
-    val unbalanced = List("())(", ")(", "(grp(vfeio)fue(fjno)", "fnfdf)")
-    val balanced = List("()", "(((())))", "dkei(,fi(,k)g,j)f,j(,vfj)", "(    )", "", "fjrbknln")
-    for (u <- unbalanced){
-      if (balance(u.toList))
-        println(u + " should be unbalanced")
-    }
-    for (b <- balanced)
-      if (!balance(b.toList))
-        println(b + " should NOT be balanced")
-
-    println("countChange")
-    val examples: List[List[List[Int]]] = List(
-      List(List(1,2), List(4, 3)),
-      List(List(1,2,5), List(11, 11)),
-      List(List(10), List(1000, 1)),
-      List(List(10), List(91, 0)),
-      List(List(1,2,5,10), List(8, 7)),
-      List(List(1,2,5,10), List(11,12)),
-      List(List(2), List(0, 1)))
-
-    for (example <- examples){
-      if (countChange(example.tail.head.head, example.head) != example.tail.head.tail.head)
-        println("money " + example.tail.head.head + " should be " + example.tail.head.tail.head + " but found " + countChange(example.tail.head.head, example.head))
-    }
   }
 
   /**
