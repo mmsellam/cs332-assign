@@ -22,7 +22,7 @@ object FunSets {
   /**
    * Returns the set of the one given element.
    */
-  def singletonSet(elem: Int): Set = elem => false
+  def singletonSet(elem: Int): Set = e => e == elem
 
   /**
    * Returns the union of the two given sets,
@@ -59,7 +59,7 @@ object FunSets {
     @tailrec
     def iter(a: Int): Boolean = {
       if (a > bound) true
-      else if (!p(a)) false
+      else if (!p(a) && s(a)) false
       else iter(a + 1)
     }
     iter(-bound)
@@ -69,20 +69,13 @@ object FunSets {
    * Returns whether there exists a bounded integer within `s`
    * that satisfies `p`.
    */
-  def exists(s: Set, p: Int => Boolean): Boolean = {
-    @tailrec
-    def iter(a: Int): Boolean = {
-      if (a > bound) false
-      else if (p(a)) true
-      else iter(a + 1)
-    }
-    iter(-bound)
-  }
+  def exists(s: Set, p: Int => Boolean): Boolean =
+    !forall(s, e => !p(e))
 
   /**
    * Returns a set transformed by applying `f` to each element of `s`.
    */
-  def map(s: Set, f: Int => Int): Set = elem => s(f(elem))
+  def map(s: Set, f: Int => Int): Set = e => exists(s, i => f(i) == e)
 
   /**
    * Displays the contents of a set
