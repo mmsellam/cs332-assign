@@ -6,13 +6,13 @@ scalaVersion := "2.11.5"
 
 scalacOptions ++= Seq("-deprecation", "-feature")
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "1.8.0" % "test"
+libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.4" % "test"
 
 libraryDependencies += "junit" % "junit" % "4.10" % "test"
 
 // This setting defines the project to which a solution is submitted. When creating a
 // handout, the 'createHandout' task will make sure that its value is correct.
-submitProjectName := "objsets"
+submitProjectName := "patmat"
 
 libraryDependencies ++= {
   val c = currentProject.value
