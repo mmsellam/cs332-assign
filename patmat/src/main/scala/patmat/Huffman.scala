@@ -1,8 +1,9 @@
 package patmat
 
 import common._
-import patmat.Huffman.{Fork, Leaf, chars, combine, createCodeTree, decode, encode, makeOrderedLeafList, string2Chars, times, weight}
+import patmat.Huffman.{Fork, Leaf, chars, combine, createCodeTree, decode, encode, makeOrderedLeafList, quickEncode, string2Chars, times, weight}
 
+import java.lang
 import scala.annotation.tailrec
 import scala.collection.immutable.Stream.Empty
 
@@ -192,7 +193,20 @@ object Huffman {
    * This function decodes the bit sequence `bits` using the code tree `tree` and returns
    * the resulting list of characters.
    */
-  def decode(tree: CodeTree, bits: List[Bit]): List[Char] = ???
+  def decode(tree: CodeTree, bits: List[Bit]): List[Char] = {
+    @tailrec
+    def decodeAcc(baseTree: CodeTree, bits: List[Bit])(branchOfTree: CodeTree, acc: List[Char]): List[Char] = (branchOfTree,bits) match {
+      case (Leaf(char, _), Nil) => char :: acc
+      case (Leaf(char, _), _) => decodeAcc(tree, bits)(baseTree, char :: acc)
+      case (Fork(_, _, _, _), Nil) =>
+        throw new IllegalArgumentException("list of bits is not conform to the tree encoding")
+      case (Fork(left, right, _, _), head :: tail) => head match {
+        case 0 => decodeAcc(tree, tail)(left, acc)
+        case 1 => decodeAcc(tree, tail)(right, acc)
+      }
+    }
+    decodeAcc(tree, bits)(tree, Nil).reverse
+  }
 
   /**
    * A Huffman coding tree for the French language.
@@ -210,7 +224,7 @@ object Huffman {
   /**
    * Write a function that returns the decoded secret
    */
-  def decodedSecret: List[Char] = ???
+  def decodedSecret: List[Char] = decode(frenchCode, secret)
 
 
 
@@ -220,7 +234,37 @@ object Huffman {
    * This function encodes `text` using the code tree `tree`
    * into a sequence of bits.
    */
-  def encode(tree: CodeTree)(text: List[Char]): List[Bit] = ???
+  def encode(tree: CodeTree)(text: List[Char]): List[Bit] = {
+    @tailrec
+    def encodeAcc(baseTree: CodeTree)
+                 (text: List[Char])
+                 (branchOfTree: CodeTree)
+                 (acc: List[Bit]): List[Bit] = {
+      if (text.isEmpty)
+        return acc
+      branchOfTree match{
+        case Leaf(char,_) =>
+          if (char == text.head)
+            encodeAcc(baseTree)(text.tail)(baseTree)(acc)
+          else
+            throw new RuntimeException("The tree went to the wrong leaf")
+        case Fork(left, right, chars,_) =>
+          if (!chars.contains(text.head)) {
+            if (!Huffman.chars(baseTree).contains(text.head))
+              throw new IllegalArgumentException("the dictionary does not contains this word")
+            throw new RuntimeException("the tree went to the wrong direction")
+          }
+          if (Huffman.chars(left).contains(text.head))
+            encodeAcc(baseTree)(text)(left)(0 :: acc)
+          else if (Huffman.chars(right).contains(text.head))
+            encodeAcc(baseTree)(text)(right)(1 :: acc)
+          else
+            throw new RuntimeException("the letter exists in the tree but in none of its children")
+
+      }
+    }
+    encodeAcc(tree)(text)(tree)(Nil).reverse
+  }
 
 
   // Part 4b: Encoding using code table
@@ -231,7 +275,11 @@ object Huffman {
    * This function returns the bit sequence that represents the character `char` in
    * the code table `table`.
    */
-  def codeBits(table: CodeTable)(char: Char): List[Bit] = ???
+  def codeBits(table: CodeTable)(char: Char): List[Bit] = {
+    if (!table.exists(e => e._1.equals(char)))
+      throw new IllegalArgumentException("the char given does not exist in the table")
+    table.dropWhile(e => !char.equals(e._1)).head._2
+  }
 
   /**
    * Given a code tree, create a code table which contains, for every character in the
@@ -241,14 +289,25 @@ object Huffman {
    * a valid code tree that can be represented as a code table. Using the code tables of the
    * sub-trees, think of how to build the code table for the entire tree.
    */
-  def convert(tree: CodeTree): CodeTable = ???
+  def convert(tree: CodeTree): CodeTable = {
+    def convertAcc(tree: CodeTree)
+                  (posInTree: List[Bit])
+                  (acc: CodeTable): CodeTable =
+      tree match{
+        case Leaf(char,_) => (char, posInTree.reverse) :: acc
+        case Fork(left, right,_,_) =>
+          mergeCodeTables(convertAcc(left)(0 :: posInTree)(acc), convertAcc(right)(1 :: posInTree)(acc) )
+      }
+    convertAcc(tree)(Nil)(Nil)
+  }
 
   /**
    * This function takes two code tables and merges them into one. Depending on how you
    * use it in the `convert` method above, this merge method might also do some transformations
    * on the two parameter code tables.
    */
-  def mergeCodeTables(a: CodeTable, b: CodeTable): CodeTable = ???
+  def mergeCodeTables(a: CodeTable, b: CodeTable): CodeTable =
+    (a ::: b).groupBy(_._1).map(e => (e._1, e._2.minBy(a => a._2.size)._2))(collection.breakOut)
 
   /**
    * This function encodes `text` according to the code tree `tree`.
@@ -256,16 +315,17 @@ object Huffman {
    * To speed up the encoding process, it first converts the code tree to a code table
    * and then uses it to perform the actual encoding.
    */
-  def quickEncode(tree: CodeTree)(text: List[Char]): List[Bit] = ???
+  def quickEncode(tree: CodeTree)(text: List[Char]): List[Bit] =
+    text.flatMap(codeBits(convert(tree)))
 }
 
 object Main extends App{
 
-  val t0: List[Char] = 'a' :: 'b' :: 'e' :: 'a' :: 'c' :: 'a' :: 'e' :: 'a' :: 'b' :: Nil
+  val l0: List[Char] = 'a' :: 'b' :: 'e' :: 'a' :: 'c' :: 'a' :: 'e' :: 'a' :: 'b' :: 'd' :: Nil
+  val t0 = createCodeTree(l0)
   val t1 = Fork(Leaf('a',2), Leaf('b',3), List('a','b'), 5)
   val t2 = Fork(Fork(Leaf('a',2), Leaf('b',3), List('a','b'), 5), Leaf('d',4), List('a','b','d'), 9)
 
-  println(createCodeTree(t0))
   println("weight of a larger tree")
   if(weight(t1) != 5)
     println("weight of a larger tree failed")
@@ -290,4 +350,13 @@ object Main extends App{
   println("decode and encode a very short text should be identity")
   if(decode(t1, encode(t1)("ab".toList)) != "ab".toList)
     println("decode and encode a very short text should be identity failed")
+
+  println("decode and encode a long text should be identity")
+  if(decode(t0, encode(t0)("abeadcbedaca".toList)) != "abeadcbedaca".toList)
+    println("decode and encode a long text should be identity failed")
+
+  println("decode and quick encode a long text should be identity")
+  if(decode(t0, quickEncode(t0)("abeadcbedaca".toList)) != "abeadcbedaca".toList)
+    println("decode and quick encode a long text should be identity failed")
+
 }
