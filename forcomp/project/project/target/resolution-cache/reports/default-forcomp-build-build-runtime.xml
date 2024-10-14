@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="ivy-report.xsl"?>
+<ivy-report version="1.0">
+	<info
+		organisation="default"
+		module="forcomp-build-build"
+		revision="0.1-SNAPSHOT"
+		extra-scalaVersion="2.10"
+		extra-sbtVersion="0.13"
+		conf="runtime"
+		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
+		date="20241014215820"/>
+	<dependencies>
+		<module organisation="org.scala-sbt" name="global-plugins">
+			<revision name="0.0" status="integration" pubdate="20241014215804" resolver="inter-project" artresolver="inter-project" extra-scalaVersion="2.10" extra-sbtVersion="0.13" downloaded="false" searched="false" default="false" conf="compile, default(compile)" position="0">
+				<metadata-artifact status="failed" details="" size="0" time="0" searched="false"/>
+				<caller organisation="default" name="forcomp-build-build" conf="compile, runtime" rev="0.0" rev-constraint-default="0.0" rev-constraint-dynamic="0.0" callerrev="0.1-SNAPSHOT" extra-scalaVersion="2.10" extra-sbtVersion="0.13"/>
+				<artifacts>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.jetbrains.scala" name="sbt-idea-shell">
+			<revision name="2021.1.0" status="release" pubdate="20210224001805" resolver="sbt-chain" artresolver="sbt-chain" homepage="https://github.com/JetBrains/sbt-structure" extra-scalaVersion="2.10" extra-sbtVersion="0.13" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="2">
+				<license name="Apache-2.0" url="http://www.apache.org/licenses/LICENSE-2.0.html"/>
+				<metadata-artifact status="no" details="" size="3027" time="0" location="C:\Users\poseidon\.ivy2\cache\scala_2.10\sbt_0.13\org.jetbrains.scala\sbt-idea-shell\ivy-2021.1.0.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/jetbrains/scala/sbt-idea-shell_2.10_0.13/2021.1.0/sbt-idea-shell-2021.1.0.pom"/>
+				<caller organisation="org.scala-sbt" name="global-plugins" conf="compile" rev="2021.1.0" rev-constraint-default="2021.1.0" rev-constraint-dynamic="2021.1.0" callerrev="0.0" extra-scalaVersion="2.10" extra-sbtVersion="0.13"/>
+				<artifacts>
+					<artifact name="sbt-idea-shell" type="jar" ext="jar" status="no" details="" size="12881" time="0" location="C:\Users\poseidon\.ivy2\cache\scala_2.10\sbt_0.13\org.jetbrains.scala\sbt-idea-shell\jars\sbt-idea-shell-2021.1.0.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/jetbrains/scala/sbt-idea-shell_2.10_0.13/2021.1.0/sbt-idea-shell-2021.1.0.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.jetbrains.scala" name="sbt-structure-extractor">
+			<revision name="2024.2.2" status="release" pubdate="20240704174159" resolver="sbt-chain" artresolver="sbt-chain" homepage="https://github.com/JetBrains/sbt-structure" extra-scalaVersion="2.10" extra-sbtVersion="0.13" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="1">
+				<license name="Apache-2.0" url="http://www.apache.org/licenses/LICENSE-2.0"/>
+				<metadata-artifact status="no" details="" size="3285" time="0" location="C:\Users\poseidon\.ivy2\cache\scala_2.10\sbt_0.13\org.jetbrains.scala\sbt-structure-extractor\ivy-2024.2.2.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/jetbrains/scala/sbt-structure-extractor_2.10_0.13/2024.2.2/sbt-structure-extractor-2024.2.2.pom"/>
+				<caller organisation="org.scala-sbt" name="global-plugins" conf="compile" rev="2024.2.2" rev-constraint-default="2024.2.2" rev-constraint-dynamic="2024.2.2" callerrev="0.0" extra-scalaVersion="2.10" extra-sbtVersion="0.13"/>
+				<artifacts>
+					<artifact name="sbt-structure-extractor" type="jar" ext="jar" status="no" details="" size="782256" time="0" location="C:\Users\poseidon\.ivy2\cache\scala_2.10\sbt_0.13\org.jetbrains.scala\sbt-structure-extractor\jars\sbt-structure-extractor-2024.2.2.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/jetbrains/scala/sbt-structure-extractor_2.10_0.13/2024.2.2/sbt-structure-extractor-2024.2.2.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+	</dependencies>
+</ivy-report>

@@ -95,10 +95,10 @@ object Anagrams {
     else {
       val head = occurrences.head
       val tailCombos = combinations(occurrences.tail)
-      (for {
+      ((for {
         i <- 1 to head._2
         combo <- tailCombos
-      } yield (head._1, i) :: combo).toList ::: tailCombos
+      } yield (head._1, i) :: combo).toList ::: tailCombos).map(e => e.sortBy(_._1))
     }
   }
 
@@ -163,7 +163,7 @@ object Anagrams {
   def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
     def sentenceAnagramsHelper(sentOcc: Occurrences): List[Sentence]= {
       if (sentOcc.isEmpty)
-        List(Nil)
+        List(List())
       else (for (word <- loadDictionary if combinations(sentOcc).contains(wordOccurrences(word)))
         yield sentenceAnagramsHelper(subtract(sentOcc, wordOccurrences(word))).map(word :: _)
         ).flatten
